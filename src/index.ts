@@ -3,10 +3,11 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { readFile } from "fs/promises";
 
-const DEFAULT_CHECKPOINTS_PATH =
-  "/Users/Tiresias/Library/Application Support/com.raycast.macos/extensions/work-checkpoints/checkpoints.json";
-
-const CHECKPOINTS_PATH = process.env.CHECKPOINTS_PATH ?? DEFAULT_CHECKPOINTS_PATH;
+if (!process.env.CHECKPOINTS_PATH) {
+  console.error("CHECKPOINTS_PATH environment variable is required");
+  process.exit(1);
+}
+const CHECKPOINTS_PATH: string = process.env.CHECKPOINTS_PATH;
 
 interface Checkpoint {
   id: string;

@@ -22,24 +22,13 @@ Add to your Claude Desktop config (`claude_desktop_config.json`):
   "mcpServers": {
     "work-checkpoints": {
       "command": "node",
-      "args": ["/path/to/work-checkpoints-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-Optionally override the checkpoints file path:
-
-```json
-{
-  "mcpServers": {
-    "work-checkpoints": {
-      "command": "node",
       "args": ["/path/to/work-checkpoints-mcp/dist/index.js"],
       "env": {
-        "CHECKPOINTS_PATH": "/custom/path/checkpoints.json"
+        "CHECKPOINTS_PATH": "/path/to/checkpoints.json"
       }
     }
   }
 }
 ```
+
+`CHECKPOINTS_PATH` is required — it should point to the `checkpoints.json` file synced by the Raycast extension.
