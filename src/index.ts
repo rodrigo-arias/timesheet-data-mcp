@@ -30,6 +30,11 @@ if (!process.env.CHECKPOINTS_PATH) {
 }
 const CHECKPOINTS_PATH: string = process.env.CHECKPOINTS_PATH;
 
+// Warn at startup: a stale path is otherwise indistinguishable from an empty day
+if (!fs.existsSync(CHECKPOINTS_PATH)) {
+  console.error(`Warning: CHECKPOINTS_PATH does not exist: ${CHECKPOINTS_PATH}`);
+}
+
 interface Checkpoint {
   id: string;
   timestamp: string;
@@ -41,9 +46,14 @@ async function loadCheckpoints(): Promise<Checkpoint[]> {
   try {
     const data = await readFile(CHECKPOINTS_PATH, "utf-8");
     const parsed = JSON.parse(data);
-    if (!Array.isArray(parsed)) return [];
+    if (!Array.isArray(parsed)) {
+      console.error(`Checkpoints file is not a JSON array: ${CHECKPOINTS_PATH}`);
+      return [];
+    }
     return parsed;
-  } catch {
+  } catch (err) {
+    // Never throw, but don't stay silent either: a quiet [] hid a dead path for weeks
+    console.error(`Failed to read checkpoints from ${CHECKPOINTS_PATH}:`, err);
     return [];
   }
 }
